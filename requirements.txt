@@ -6,3 +6,4 @@ pyjanitor
 joblib
 streamlit
 pandas
+streamlit-aggrid
