@@ -54,13 +54,12 @@ if user_input != None:
                         dataframe = dataframe.drop(columns=['mol'])
                 except:
                         pass
-                st.dataframe(dataframe)
-                #AgGrid(dataframe)
+                AgGrid(dataframe)
 
       
 
         ### Download  Dataframe###
-        @st.cache
+    """     @st.cache
         def convert_df(df):
                 return df.to_csv().encode('utf-8')
 
@@ -74,4 +73,4 @@ if user_input != None:
         "file.csv",
         "text/csv",
         key='download-csv'
-        )
+        ) """
