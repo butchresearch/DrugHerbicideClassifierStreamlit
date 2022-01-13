@@ -35,6 +35,13 @@ OutputSelector = st.sidebar.selectbox("Select Outpuy Type",("Verbose","Simplifie
 ##### Work with dataframe ###
 if user_input != None:
         dataframe = DHClassifier(user_input)
+        ### Download  Dataframe###
+        @st.cache
+        def convert_df(df):
+                return df.to_csv().encode('utf-8')
+
+        
+        csv = convert_df(dataframe)
 
         if OutputSelector == "Verbose":
                 pass
@@ -52,19 +59,14 @@ if user_input != None:
 
       
 
-        ### Download  Dataframe###
-        @st.cache
-        def convert_df(df):
-                return df.to_csv().encode('utf-8')
 
 
 
-        csv = convert_df(dataframe)
 
-        st.download_button(
-        "Press to Download",
-        csv,
-        "file.csv",
-        "text/csv",
-        key='download-csv'
-        )
+st.download_button(
+"Press to Download",
+csv,
+"file.csv",
+"text/csv",
+key='download-csv'
+)
