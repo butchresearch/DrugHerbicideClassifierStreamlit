@@ -35,38 +35,18 @@ OutputSelector = st.sidebar.selectbox("Select Outpuy Type",("Verbose","Simplifie
 ##### Work with dataframe ###
 if user_input != None:
         dataframe = DHClassifier(user_input)
-        ### Download  Dataframe###
-        @st.cache
-        def convert_df(df):
-                return df.to_csv().encode('utf-8')
-
-        
-        csv = convert_df(dataframe)
 
         if OutputSelector == "Verbose":
                 pass
         else:
                 dataframe =  dataframe[["SMILES","mol","XG_Drug","XG_Herbicide","LR_Drug","LR_Herbicide","RF_Drug","RF_Herbicide","SVM_Drug","SVM_Herbicide"]]
 
-
-       
+   
+     
         try:
                 dataframe = dataframe.drop(columns=['mol'])
         except:
                 pass
-        
         AgGrid(dataframe)
 
       
-
-
-
-
-
-st.download_button(
-"Press to Download",
-csv,
-"file.csv",
-"text/csv",
-key='download-csv'
-)
