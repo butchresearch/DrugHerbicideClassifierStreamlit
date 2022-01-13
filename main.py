@@ -42,13 +42,10 @@ if user_input != None:
 
 
         if VisualizationSelector == "Yes":
-                try:
-                        dataframe = dataframe.drop(columns=['mol'])
-                except:
-                        pass
+              
                 #st.dataframe(dataframe)
-                #st.write(dataframe.to_html(escape=False), unsafe_allow_html=True)
-                st.dataframe(dataframe)
+                st.write(dataframe.to_html(escape=False), unsafe_allow_html=True)
+              
         elif VisualizationSelector == "No":
                 try:
                         dataframe = dataframe.drop(columns=['mol'])
