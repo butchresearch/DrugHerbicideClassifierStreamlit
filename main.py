@@ -42,14 +42,20 @@ if user_input != None:
 
 
         if VisualizationSelector == "Yes":
+                try:
+                        dataframe = dataframe.drop(columns=['mol'])
+                except:
+                        pass
                 #st.dataframe(dataframe)
-                st.write(dataframe.to_html(escape=False), unsafe_allow_html=True)
+                #st.write(dataframe.to_html(escape=False), unsafe_allow_html=True)
+                st.dataframe(dataframe)
         elif VisualizationSelector == "No":
                 try:
                         dataframe = dataframe.drop(columns=['mol'])
                 except:
                         pass
-                AgGrid(dataframe)
+                st.dataframe(dataframe)
+                #AgGrid(dataframe)
 
       
 
