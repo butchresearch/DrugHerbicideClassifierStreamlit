@@ -41,21 +41,30 @@ if user_input != None:
         else:
                 dataframe =  dataframe[["SMILES","mol","XG_Drug","XG_Herbicide","LR_Drug","LR_Herbicide","RF_Drug","RF_Herbicide","SVM_Drug","SVM_Herbicide"]]
 
-        if VisualizationSelector == "Yes":
-                try:
-                        dataframe = dataframe.drop(columns=['mol'])
-                except:
-                        pass
-                st.dataframe(dataframe)
-                #st.write(dataframe.to_html(escape=False), unsafe_allow_html=True)
-              
-        elif VisualizationSelector == "No":
-                try:
-                        dataframe = dataframe.drop(columns=['mol'])
-                except:
-                        pass
-                AgGrid(dataframe)
+
+       
+        try:
+                dataframe = dataframe.drop(columns=['mol'])
+        except:
+                pass
+        
+        AgGrid(dataframe)
 
       
 
-      
+        ### Download  Dataframe###
+        @st.cache
+        def convert_df(df):
+                return df.to_csv().encode('utf-8')
+
+
+
+        csv = convert_df(dataframe)
+
+        st.download_button(
+        "Press to Download",
+        csv,
+        "file.csv",
+        "text/csv",
+        key='download-csv'
+        )
