@@ -88,7 +88,7 @@ elif InputSelector == "CSV":
 ### Select Visualization tool 
 VisualizationSelector = st.sidebar.radio("Show Molecule",('Yes', 'No'))
 
-OutputSelector = st.sidebar.selectbox("Select Outpuy Type",("Verbose","Simplified"))                     # Select input Type 
+OutputSelector = st.sidebar.selectbox("Select Outpuy Type",("Simplified","Verbose"))                     # Select input Type 
 
 
 
@@ -116,11 +116,11 @@ if user_input != None:
 
         XG_herbicide = dataframe[["XG_Herbicide"]].iloc[:, 0].tolist()
         if type(user_input) == str:
-                cols = st.beta_columns([1,1,6,1,1])
+                cols = st.columns([1,1,6,1,1])
                 for i in range(0,len(cols)):
                         with cols[i]:
                                 if i == 2:
-                                        out =  f"       XG herbicide: {round(XG_herbicide[0],4)}"
+                                        out =  f"                               XG herbicide: {round(XG_herbicide[0],4)}"
                                         st.write(out)
                                         m = Chem.MolFromSmiles(user_input)
                                         im= Draw.MolToImage(m)
