@@ -18,11 +18,15 @@ st.write(
         """)
 
 
+@st.cache
+def fetch_and_clean_data(data):
+    return data
+
 #### SELECTION OF INPUT TYPE ####
 InputSelector = st.sidebar.selectbox("Select Input Type",("Smiles String","CSV"))                     # Select input Type 
 if InputSelector == "Smiles String":
         user_input         = st.sidebar.text_input("Select a Valid Smiles String:", "CC")             # Siles String INput
-    
+        user_input         =  fetch_and_clean_data(user_input)
 elif InputSelector == "CSV":
         uploaded_file = st.file_uploader("Choose a file")
         if uploaded_file is not None:
