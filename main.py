@@ -76,7 +76,7 @@ def fetch_and_clean_data(data):
 #### SELECTION OF INPUT TYPE ####
 InputSelector = st.sidebar.selectbox("Select Input Type",("Smiles String","CSV"))                     # Select input Type 
 if InputSelector == "Smiles String":
-        user_input         = st.sidebar.text_input("Select a Valid Smiles String:", "CC")             # Siles String INput
+        user_input         = st.sidebar.text_input("Select a Valid Smiles String:", "OC(=O)CNCP(O)(O)=O")             # Siles String INput
         user_input         =  fetch_and_clean_data(user_input)
 elif InputSelector == "CSV":
         uploaded_file = st.file_uploader("Choose a file")
@@ -113,14 +113,24 @@ if user_input != None:
         ## Molecule Visualizer
         
         """)
+
+        XG_herbicide = dataframe[["XG_Herbicide"]].iloc[:, 0].tolist()
         if type(user_input) == str:
-                m = Chem.MolFromSmiles(user_input)
-                im= Draw.MolToImage(m)
-                st.image(im,caption=user_input)
+                cols = st.beta_columns([1,1,6,1,1])
+                for i in range(0,len(cols)):
+                        with cols[i]:
+                                if i == 2:
+                                        out =  f"       XG herbicide: {round(XG_herbicide[0],4)}"
+                                        st.write(out)
+                                        m = Chem.MolFromSmiles(user_input)
+                                        im= Draw.MolToImage(m)
+                                        st.image(im,caption=user_input)
+                                else:
+                                        pass
 
         elif  type(user_input) == list:
                 mols = [Chem.MolFromSmiles(i) for i in user_input] 
                 ims  = [Draw.MolToImage(i) for i in mols]
                 image_iterator = paginator("Molecules", ims)
                 indices_on_page, images_on_page = map(list, zip(*image_iterator))
-                st.image(images_on_page, width=100, caption=indices_on_page)
+                st.image(images_on_page, width=150, caption=user_input)
