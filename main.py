@@ -2,7 +2,12 @@ import streamlit as st
 import pandas as pd
 from streamlit.type_util import data_frame_to_bytes
 from st_aggrid import AgGrid
+from rdkit import Chem
+from rdkit.Chem import Draw
 from dhclassifier import DHClassifier
+from rdkit.Chem.Draw import IPythonConsole
+from PIL import Image
+
 dataframe  = pd.DataFrame()
 user_input = None
 st.title('Drug Herbicide Classifier ') #Set Tittle
@@ -35,18 +40,17 @@ OutputSelector = st.sidebar.selectbox("Select Outpuy Type",("Verbose","Simplifie
 ##### Work with dataframe ###
 if user_input != None:
         dataframe = DHClassifier(user_input)
-
         if OutputSelector == "Verbose":
                 pass
         else:
                 dataframe =  dataframe[["SMILES","mol","XG_Drug","XG_Herbicide","LR_Drug","LR_Herbicide","RF_Drug","RF_Herbicide","SVM_Drug","SVM_Herbicide"]]
 
-   
-     
-        try:
-                dataframe = dataframe.drop(columns=['mol'])
-        except:
-                pass
-        AgGrid(dataframe)
+        #### Remove MOl  ###
+        #dataframe = dataframe.drop(columns=['mol'])
 
+        ### SHOW TABLE ####
+        #AgGrid(dataframe)
+        st.write(dataframe.to_html(escape=False), unsafe_allow_html=True)
+
+     
       
