@@ -50,11 +50,26 @@ if user_input != None:
                 dataframe =  dataframe[["SMILES","mol","XG_Drug","XG_Herbicide","LR_Drug","LR_Herbicide","RF_Drug","RF_Herbicide","SVM_Drug","SVM_Herbicide"]]
 
         #### Remove MOl  ###
-        #dataframe = dataframe.drop(columns=['mol'])
+        dataframe = dataframe.drop(columns=['mol'])
 
         ### SHOW TABLE ####
-        #AgGrid(dataframe)
-        st.write(dataframe.to_html(escape=False), unsafe_allow_html=True)
+        AgGrid(dataframe)
 
-     
+       # mols = [Chem.MolFromSmiles(i) for i in user_input] 
+        #st.image(Draw.MolsToGridImage(mols))
+
+        if type(user_input) == str:
+                m = Chem.MolFromSmiles(user_input)
+                im= Draw.MolToImage(m)
+                st.image(im)
+
+        elif  type(user_input) == list:
+                mols = [Chem.MolFromSmiles(i) for i in user_input] 
+                for m in mols:
+                        im= Draw.MolToImage(m)
+                        st.image(im)
+
+             
+
+
       
