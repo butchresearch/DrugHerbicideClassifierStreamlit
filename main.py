@@ -5,9 +5,13 @@ from st_aggrid import AgGrid
 from rdkit import Chem
 from rdkit.Chem import Draw
 from dhclassifier import DHClassifier
+import numpy as np
 from rdkit.Chem.Draw import IPythonConsole
 from PIL import Image
 
+st.set_page_config(page_title="Drug Herbicide Classifier", page_icon ="💠", layout="wide")
+
+predictions = ["XG_Drug","XG_Herbicide","LR_Drug","LR_Herbicide","RF_Drug","RF_Herbicide","SVM_Drug","SVM_Herbicide"]
 dataframe  = pd.DataFrame()
 user_input = None
 st.title('Drug Herbicide Classifier ') #Set Tittle
@@ -87,9 +91,8 @@ elif InputSelector == "CSV":
          
 ### Select Visualization tool 
 VisualizationSelector = st.sidebar.radio("Show Molecule",('Yes', 'No'))
-
 OutputSelector = st.sidebar.selectbox("Select Outpuy Type",("Simplified","Verbose"))                     # Select input Type 
-
+roundby = st.sidebar.slider("Decimal Places",min_value=1, max_value=6,value=6)
 
 
 ##### Work with dataframe ###
@@ -103,34 +106,50 @@ if user_input != None:
         #### Remove MOl  ###
         dataframe = dataframe.drop(columns=['mol'])
 
-        ### SHOW TABLE ####
-        AgGrid(dataframe)
-
-       # mols = [Chem.MolFromSmiles(i) for i in user_input] 
-        #st.image(Draw.MolsToGridImage(mols))
-        st.write(
-        """
-        ## Molecule Visualizer
         
-        """)
+        ### FIXING DATATYPES IN ODER TO MAKE PROPER ROUNDING ###
+        dataframe["XG_Drug"] = dataframe["XG_Drug"].to_numpy(dtype=np.float64)
+        dataframe["XG_Herbicide"] = dataframe["XG_Herbicide"].to_numpy(dtype=np.float64)
+        ### ROUND ###
+        dataframe = dataframe.round(decimals =roundby)
 
-        XG_herbicide = dataframe[["XG_Herbicide"]].iloc[:, 0].tolist()
-        if type(user_input) == str:
-                cols = st.columns([1,1,6,1,1])
-                for i in range(0,len(cols)):
-                        with cols[i]:
-                                if i == 2:
-                                        out =  f"                               XG herbicide: {round(XG_herbicide[0],4)}"
-                                        st.write(out)
-                                        m = Chem.MolFromSmiles(user_input)
-                                        im= Draw.MolToImage(m)
-                                        st.image(im,caption=user_input)
-                                else:
-                                        pass
+        print(type(dataframe["XG_Drug"][0]))
+        ### SHOW TABLE ####
+        if InputSelector == "Smiles String":
+            st.dataframe(dataframe)
+            
+            
 
-        elif  type(user_input) == list:
-                mols = [Chem.MolFromSmiles(i) for i in user_input] 
-                ims  = [Draw.MolToImage(i) for i in mols]
-                image_iterator = paginator("Molecules", ims)
-                indices_on_page, images_on_page = map(list, zip(*image_iterator))
-                st.image(images_on_page, width=150, caption=user_input)
+        elif InputSelector == "CSV":
+            AgGrid(dataframe)
+
+  
+        if  VisualizationSelector == "Yes":
+            st.write(
+            """
+            ## Molecule Visualizer
+            
+            """)
+
+            XG_herbicide = dataframe[["XG_Herbicide"]].iloc[:, 0].tolist()
+            if type(user_input) == str:
+                    cols = st.columns([1,1,6,1,1])
+                    for i in range(0,len(cols)):
+                            with cols[i]:
+                                    if i == 2:
+                                            out =  f"                               XG herbicide: {round(XG_herbicide[0],4)}"
+                                            st.write(out)
+                                            m = Chem.MolFromSmiles(user_input)
+                                            im= Draw.MolToImage(m)
+                                            st.image(im,caption=user_input)
+                                    else:
+                                            pass
+
+            elif  type(user_input) == list:
+                    mols = [Chem.MolFromSmiles(i) for i in user_input] 
+                    ims  = [Draw.MolToImage(i) for i in mols]
+                    image_iterator = paginator("Molecules", ims)
+                    indices_on_page, images_on_page = map(list, zip(*image_iterator))
+                    st.image(images_on_page, width=150, caption=user_input)
+        else:
+            pass
