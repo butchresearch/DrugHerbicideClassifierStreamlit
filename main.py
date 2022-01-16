@@ -15,13 +15,47 @@ HerbicideLabel = "🌿"
 predictions = ["XG_Drug","XG_Herbicide","LR_Drug","LR_Herbicide","RF_Drug","RF_Herbicide","SVM_Drug","SVM_Herbicide"]
 dataframe  = pd.DataFrame()
 user_input = None
-st.title('Drug Herbicide Classifier ') #Set Tittle
+st.title('Drug Herbicide Classifier: Drug Chemical Space as a Guide for New Herbicide Development: A Cheminformatic Analysis ') #Set Tittle
+st.markdown(""" 
+**BACKGROUND:** 
+
+Herbicides are critical resources for meeting agricultural demand. While 
+similar in structure and function to pharmaceuticals, the development of new herbicidal 
+mechanisms of action and new scaffolds against known mechanisms of action has been 
+much slow compared to pharmaceutical sciences. 
+
+**RESULTS:**
+
+ We trained several machine learning techniques to classify herbicides versus 
+drugs based on physicochemical characteristics. The most accurate, has an accuracy of 
+93%. The key differentiating characteristics were polar hydrogens, number of amide 
+bonds, solubility, and polar surface area. We then analyzed the diversity of each set 
+based on scaffolds and scaffold decomposition and showed the chemical diversity of 
+herbicides to be considerably lower. Finally, we conducted docking assays with 
+herbicides modified with complementary structural components only present in drugs, 
+and show the increased chemical diversity to enhance herbicide binding to enzyme 
+targets. 
+
+**CONCLUSION:**
+
+ Herbicides are distinct from drugs based on physicochemical properties, 
+but less diverse in their chemistry in a way not governed by these properties. Increasing 
+the diversity of herbicide scaffolds has the potential to increase potency, potentially 
+reducing the amount needed in agricultural practice.""")
 st.write(
         """
         ## Explore our Models Online
         
         """)
+st.markdown("This is a compendium of the Machine Learning models trained at Drug Chemical Space as a Guide for New Herbicide Development: A Cheminformatic Analysis")
 
+st.markdown("## How to use it?")
+st.markdown("Using the menu sidebar select the parameters you wish to use (If the sidebar is not visable click on the arrow a the top left of your screen)")
+st.markdown("1. Select Input type")
+st.markdown("2. Parse the Data")
+st.markdown("3. Select if you wish to visualize molecules ")
+st.markdown("4. Select output (Simplified only displays predictions, verbose displays additional metadata use during tryning) ")
+st.markdown("5. Select the threshold value (0.5 by default) ")
 def paginator(label, items, items_per_page=20, on_sidebar=True):
     """Lets the user paginate a set of items.
     Parameters
@@ -81,6 +115,7 @@ def fetch_and_clean_data(data):
 #### SELECTION OF INPUT TYPE ####
 InputSelector = st.sidebar.selectbox("Select Input Type",("Smiles String","CSV"))                     # Select input Type 
 if InputSelector == "Smiles String":
+        st.markdown("Write a valid SMILES STRINGS in the text section")
         user_input         = st.sidebar.text_input("Select a Valid Smiles String:", "OC(=O)CNCP(O)(O)=O")             # Siles String INput
         user_input         =  fetch_and_clean_data(user_input)
 elif InputSelector == "CSV":
