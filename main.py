@@ -10,7 +10,8 @@ from rdkit.Chem.Draw import IPythonConsole
 from PIL import Image
 
 st.set_page_config(page_title="Drug Herbicide Classifier", page_icon ="💠", layout="wide")
-
+DrugLabel      = "💊"
+HerbicideLabel = "🌿"
 predictions = ["XG_Drug","XG_Herbicide","LR_Drug","LR_Herbicide","RF_Drug","RF_Herbicide","SVM_Drug","SVM_Herbicide"]
 dataframe  = pd.DataFrame()
 user_input = None
@@ -83,6 +84,7 @@ if InputSelector == "Smiles String":
         user_input         = st.sidebar.text_input("Select a Valid Smiles String:", "OC(=O)CNCP(O)(O)=O")             # Siles String INput
         user_input         =  fetch_and_clean_data(user_input)
 elif InputSelector == "CSV":
+        st.markdown('Select a **.csv** file containing  the SMILES strings of the moleules you wish to analyze.')
         uploaded_file = st.file_uploader("Choose a file")
         if uploaded_file is not None:
                 user_input = pd.read_csv(uploaded_file,header=None)  # Convert csv to panda dataframe
@@ -92,8 +94,8 @@ elif InputSelector == "CSV":
 ### Select Visualization tool 
 VisualizationSelector = st.sidebar.radio("Show Molecule",('Yes', 'No'))
 OutputSelector = st.sidebar.selectbox("Select Outpuy Type",("Simplified","Verbose"))                     # Select input Type 
-roundby = st.sidebar.slider("Decimal Places",min_value=1, max_value=6,value=6)
-
+roundby   = st.sidebar.slider("Decimal Places",min_value=1, max_value=6,value=6)
+Threshold = st.sidebar.slider("Threshold",min_value=0.1, max_value=0.9,value=0.5)
 
 ##### Work with dataframe ###
 if user_input != None:
@@ -130,9 +132,19 @@ if user_input != None:
             ## Molecule Visualizer
             
             """)
+            st.markdown("Classified  with threshold: " + str(Threshold))
+            st.markdown(DrugLabel  + ": Drug")
+            st.markdown(HerbicideLabel + ": Herbicide")
+
 
             XG_herbicide = dataframe[["XG_Herbicide"]].iloc[:, 0].tolist()
             if type(user_input) == str:
+                    if dataframe["XG_Drug"][0] >= Threshold:
+                        Label = DrugLabel 
+                    else:
+                        Label = HerbicideLabel
+
+
                     cols = st.columns([1,1,6,1,1])
                     for i in range(0,len(cols)):
                             with cols[i]:
@@ -141,15 +153,28 @@ if user_input != None:
                                             st.write(out)
                                             m = Chem.MolFromSmiles(user_input)
                                             im= Draw.MolToImage(m)
-                                            st.image(im,caption=user_input)
+                                            st.image(im,caption=Label+user_input)
                                     else:
                                             pass
 
             elif  type(user_input) == list:
+                    n = dataframe.shape[0]
+                    
+                    captions = []
+                    for i,a in zip(range(0,n),user_input):
+                        if dataframe["XG_Drug"][i] >= Threshold:
+                            Label = DrugLabel 
+                        else:
+                            Label = HerbicideLabel
+                        
+                        captions.append(Label+a)
+
+
+                    
                     mols = [Chem.MolFromSmiles(i) for i in user_input] 
                     ims  = [Draw.MolToImage(i) for i in mols]
                     image_iterator = paginator("Molecules", ims)
                     indices_on_page, images_on_page = map(list, zip(*image_iterator))
-                    st.image(images_on_page, width=150, caption=user_input)
+                    st.image(images_on_page, width=150, caption=captions)
         else:
             pass
