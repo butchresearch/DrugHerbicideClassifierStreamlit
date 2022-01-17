@@ -12,9 +12,10 @@ from PIL import Image
 st.set_page_config(page_title="Drug Herbicide Classifier", page_icon ="💠", layout="wide")
 DrugLabel      = "💊"
 HerbicideLabel = "🌿"
-predictions = ["XG_Drug","XG_Herbicide","LR_Drug","LR_Herbicide","RF_Drug","RF_Herbicide","SVM_Drug","SVM_Herbicide"]
-dataframe  = pd.DataFrame()
-user_input = None
+predictions    = ["XG_Drug","XG_Herbicide","LR_Drug","LR_Herbicide","RF_Drug","RF_Herbicide","SVM_Drug","SVM_Herbicide"]
+dataframe      = pd.DataFrame()
+user_input     = None
+model          = "LR_Drug"
 st.title('Drug Herbicide Classifier: Drug Chemical Space as a Guide for New Herbicide Development: A Cheminformatic Analysis ') #Set Tittle
 st.markdown(""" 
 **BACKGROUND:** 
@@ -55,7 +56,11 @@ st.markdown("1. Select Input type")
 st.markdown("2. Parse the Data")
 st.markdown("3. Select if you wish to visualize molecules ")
 st.markdown("4. Select output (Simplified only displays predictions, verbose displays additional metadata use during tryning) ")
-st.markdown("5. Select the threshold value (0.5 by default) ")
+st.markdown("5. Select the model you wish to use for visualization (This loads the model and the optimal trheshold) ")
+st.markdown("6. If you wish to manually select another threshold click on 'Yes' on Customize Thresshold ")
+st.markdown("7. A new slide will appear, select the threshold value (0.5 by default)")
+st.markdown("8. Select to wich decimal place you wish to round the output")
+st.markdown("9. For csv input if the number of moleucles exceedes the maximum of display port you can switch to a new page using the Molecules page")
 def paginator(label, items, items_per_page=20, on_sidebar=True):
     """Lets the user paginate a set of items.
     Parameters
@@ -128,9 +133,29 @@ elif InputSelector == "CSV":
          
 ### Select Visualization tool 
 VisualizationSelector = st.sidebar.radio("Show Molecule",('Yes', 'No'))
-OutputSelector = st.sidebar.selectbox("Select Outpuy Type",("Simplified","Verbose"))                     # Select input Type 
-roundby   = st.sidebar.slider("Decimal Places",min_value=1, max_value=6,value=6)
-Threshold = st.sidebar.slider("Threshold",min_value=0.1, max_value=0.9,value=0.5)
+OutputSelector        = st.sidebar.selectbox("Select Outpuy Type",("Simplified","Verbose"))                     # Select input Type 
+ModelSelector         = st.sidebar.selectbox("Select Model for Visualization",("Linear Regression","Random Forest","Support Vector Machine","Xgboost"))
+
+if ModelSelector == "Linear Regression":
+    model       = "LR_Drug"
+    Threshold   =  0.59
+elif ModelSelector == "Random Forest":
+    model       = "RF_Drug"
+    Threshold   =  0.21
+elif ModelSelector == "Support Vector Machine":
+    model = "SVM_Drug"
+    Threshold   =  0.19
+elif ModelSelector == "Xgboost":
+    model = "XG_Drug"
+    Threshold   =  0.08
+CustomTrheshold       = st.sidebar.radio("Customize Threshold",('Yes', 'No'),index=1)     
+if CustomTrheshold == "Yes":
+    Threshold             = st.sidebar.slider("Threshold",min_value=0.1, max_value=0.9,value=0.5)
+roundby               = st.sidebar.slider("Decimal Places",min_value=1, max_value=6,value=6)
+
+
+
+
 
 ##### Work with dataframe ###
 if user_input != None:
@@ -167,14 +192,14 @@ if user_input != None:
             ## Molecule Visualizer
             
             """)
-            st.markdown("Classified  with threshold: " + str(Threshold))
+            st.markdown(f"Classified Model: {ModelSelector} with threshold: " + str(Threshold))
             st.markdown(DrugLabel  + ": Drug")
             st.markdown(HerbicideLabel + ": Herbicide")
 
 
             XG_herbicide = dataframe[["XG_Herbicide"]].iloc[:, 0].tolist()
             if type(user_input) == str:
-                    if dataframe["XG_Drug"][0] >= Threshold:
+                    if dataframe[model][0] >= Threshold:
                         Label = DrugLabel 
                     else:
                         Label = HerbicideLabel
@@ -184,8 +209,8 @@ if user_input != None:
                     for i in range(0,len(cols)):
                             with cols[i]:
                                     if i == 2:
-                                            out =  f"                               XG herbicide: {round(XG_herbicide[0],4)}"
-                                            st.write(out)
+                                            #out =  f"                               XG herbicide: {round(XG_herbicide[0],4)}"
+                                            #st.write(out)
                                             m = Chem.MolFromSmiles(user_input)
                                             im= Draw.MolToImage(m)
                                             st.image(im,caption=Label+user_input)
@@ -197,7 +222,7 @@ if user_input != None:
                     
                     captions = []
                     for i,a in zip(range(0,n),user_input):
-                        if dataframe["XG_Drug"][i] >= Threshold:
+                        if dataframe[model][i] >= Threshold:
                             Label = DrugLabel 
                         else:
                             Label = HerbicideLabel
