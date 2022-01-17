@@ -61,7 +61,7 @@ st.markdown("6. If you wish to manually select another threshold click on 'Yes' 
 st.markdown("7. A new slide will appear, select the threshold value (0.5 by default)")
 st.markdown("8. Select to wich decimal place you wish to round the output")
 st.markdown("9. For csv input if the number of moleucles exceedes the maximum of display port you can switch to a new page using the Molecules page")
-def paginator(label, items, items_per_page=20, on_sidebar=True):
+def paginator(label, items, items_per_page=27, on_sidebar=True):
     """Lets the user paginate a set of items.
     Parameters
     ----------
@@ -193,8 +193,9 @@ if user_input != None:
             
             """)
             st.markdown(f"Classified Model: {ModelSelector} with threshold: " + str(Threshold))
-            st.markdown(DrugLabel  + ": Drug")
-            st.markdown(HerbicideLabel + ": Herbicide")
+            st.markdown(f"Lables for molecule predictions:")
+            st.markdown(f"* Drug Lable: {DrugLabel}")
+            st.markdown(f"* Herbicide: {HerbicideLabel}")
 
 
             XG_herbicide = dataframe[["XG_Herbicide"]].iloc[:, 0].tolist()
@@ -235,6 +236,8 @@ if user_input != None:
                     ims  = [Draw.MolToImage(i) for i in mols]
                     image_iterator = paginator("Molecules", ims)
                     indices_on_page, images_on_page = map(list, zip(*image_iterator))
-                    st.image(images_on_page, width=150, caption=captions)
+                    current_captions = [captions[i] for i in indices_on_page]           # Retrive Current Captions
+              
+                    st.image(images_on_page, width=150,caption=current_captions)
         else:
             pass
