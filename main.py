@@ -12,7 +12,7 @@ import base64
 
 #def convert_df(df):
 #    return df.to_csv().encode('utf-8')
-
+@st.cache 
 def get_table_download_link_csv(df):
     #csv = df.to_csv(index=False)
     csv = df.to_csv().encode()
