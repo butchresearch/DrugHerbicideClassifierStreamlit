@@ -8,10 +8,18 @@ from dhclassifier import DHClassifier
 import numpy as np
 from rdkit.Chem.Draw import IPythonConsole
 from PIL import Image
+import base64 
 
+#def convert_df(df):
+#    return df.to_csv().encode('utf-8')
 
-def convert_df(df):
-    return df.to_csv().encode('utf-8')
+def get_table_download_link_csv(df):
+    #csv = df.to_csv(index=False)
+    csv = df.to_csv().encode()
+    #b64 = base64.b64encode(csv.encode()).decode() 
+    b64 = base64.b64encode(csv).decode()
+    href = f'<a href="data:file/csv;base64,{b64}" download="DHC.csv" target="_blank">Download csv file</a>'
+    return href
 
 st.set_page_config(page_title="Drug Herbicide Classifier", page_icon ="💠", layout="wide")
 DrugLabel      = "💊"
@@ -223,8 +231,9 @@ if user_input != None:
                                             pass
 
             elif  type(user_input) == list:
-                    csv = convert_df(dataframe)
-                    st.download_button('📥 Download Current Result',csv,"DHC.csv","text/csv",key='download-csv')
+                    #csv = convert_df(dataframe)
+                    #st.download_button('📥 Download Current Result',csv,"DHC.csv","text/csv",key='download-csv')
+                    st.markdown(get_table_download_link_csv(dataframe), unsafe_allow_html=True)
                     n = dataframe.shape[0]
                     
                     captions = []
