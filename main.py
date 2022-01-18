@@ -9,6 +9,10 @@ import numpy as np
 from rdkit.Chem.Draw import IPythonConsole
 from PIL import Image
 
+@st.cache
+def convert_df(df):
+    return df.to_csv().encode('utf-8')
+
 st.set_page_config(page_title="Drug Herbicide Classifier", page_icon ="💠", layout="wide")
 DrugLabel      = "💊"
 HerbicideLabel = "🌿"
@@ -219,6 +223,8 @@ if user_input != None:
                                             pass
 
             elif  type(user_input) == list:
+                    csv = convert_df(dataframe)
+                    st.download_button('📥 Download Current Result',csv,"DHC.csv","text/csv",key='download-csv')
                     n = dataframe.shape[0]
                     
                     captions = []
@@ -239,5 +245,7 @@ if user_input != None:
                     current_captions = [captions[i] for i in indices_on_page]           # Retrive Current Captions
               
                     st.image(images_on_page, width=150,caption=current_captions)
+
+
         else:
             pass
