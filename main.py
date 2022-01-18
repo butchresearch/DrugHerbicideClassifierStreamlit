@@ -10,8 +10,11 @@ from rdkit.Chem.Draw import IPythonConsole
 from PIL import Image
 import base64 
 
+
+@st.cache 
 def convert_df(df):
-    return df.to_csv().encode('utf-8')
+    compression_opts = dict(method='zip',archive_name='out.csv')  
+    return df.to_csv(compression=compression_opts).encode('utf-8')
 @st.cache 
 def get_table_download_link_csv(df):
     #csv = df.to_csv(index=False)
@@ -232,7 +235,7 @@ if user_input != None:
 
             elif  type(user_input) == list:
                     csv = convert_df(dataframe)
-                    #st.download_button('📥 Download Current Result',csv,"DHC.csv","text/csv",key='download-csv')
+                    st.download_button('📥 Download Current Result',csv,"DHC.csv","text/csv",key='download-csv')
                     #st.markdown(get_table_download_link_csv(dataframe), unsafe_allow_html=True)
                     n = dataframe.shape[0]
                     
