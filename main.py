@@ -234,8 +234,8 @@ if user_input != None:
                                             pass
 
             elif  type(user_input) == list:
-                    csv = convert_df(dataframe)
-                    st.download_button('📥 Download Current Result',csv,"DHC.csv","text/csv",key='download-csv')
+                    #csv = convert_df(dataframe)
+                    #st.download_button('📥 Download Current Result',csv,"DHC.csv","text/csv",key='download-csv')
                     #st.markdown(get_table_download_link_csv(dataframe), unsafe_allow_html=True)
                     n = dataframe.shape[0]
                     
