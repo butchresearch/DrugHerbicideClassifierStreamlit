@@ -63,19 +63,22 @@ st.write(
         ## Explore our Models Online
         
         """)
+
+
 st.markdown("This is a compendium of the Machine Learning models trained at Drug Chemical Space as a Guide for New Herbicide Development: A Cheminformatic Analysis")
 
 st.markdown("## How to use it?")
-st.markdown("Using the menu sidebar select the parameters you wish to use (If the sidebar is not visable click on the arrow a the top left of your screen)")
+st.markdown("Using the menu sidebar select the parameters you wish to use (If the sidebar is not visible click on the arrow at the top left of your screen)")
 st.markdown("1. Select Input type")
 st.markdown("2. Parse the Data")
 st.markdown("3. Select if you wish to visualize molecules ")
-st.markdown("4. Select output (Simplified only displays predictions, verbose displays additional metadata use during tryning) ")
-st.markdown("5. Select the model you wish to use for visualization (This loads the model and the optimal trheshold) ")
-st.markdown("6. If you wish to manually select another threshold click on 'Yes' on Customize Thresshold ")
+st.markdown("4. Select output (Simplified only displays predictions, verbose displays additional metadata use during training) ")
+st.markdown("5. Select the model you wish to use for visualization (This loads the model and the optimal threshold) ")
+st.markdown("6. If you wish to manually select another threshold, click on 'Yes' on Customize Threshold ")
 st.markdown("7. A new slide will appear, select the threshold value (0.5 by default)")
-st.markdown("8. Select to wich decimal place you wish to round the output")
-st.markdown("9. For csv input if the number of moleucles exceedes the maximum of display port you can switch to a new page using the Molecules page")
+st.markdown("8. Select to which decimal place you wish to round the output")
+st.markdown("9. For csv input if the number of molecules exceeds the maximum of display port you can switch to a new page using the Molecules page")
+
 def paginator(label, items, items_per_page=27, on_sidebar=True):
     """Lets the user paginate a set of items.
     Parameters
