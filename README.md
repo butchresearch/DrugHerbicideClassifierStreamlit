@@ -1,10 +1,4 @@
 # DrugHerbicideClassifier
-A collection of machine learned models trained to descriminate between commercial herbicides and approved pharmaceuticals
+This is the fork of DrugHerbicideClassifier which supports the Streamlet Deployment. 
 
-This repository contains the necessary files to run the classifiers described in "Drug Chemical Space as a Guide for New Herbicide Development: A Cheminformatic Analysis".
-
-For readers who are interested in the predictions, but do not wish to run them locally, an online version of this workbook is available at www.streamlet.com/drugherbicideclassifier.
-
-Installation instructions are included in requirements.txt.
-
-An example calculation is provided in the included the Jupyter notebook.
+Normal Users should not need to clone this repo. See github.com/butchresearch/DrugHerbicideClassifier instead.
